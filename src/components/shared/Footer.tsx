@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { BookOpen, Mail, Phone, MapPin } from 'lucide-react';
-import { FaXTwitter, FaFacebookF, FaInstagram } from 'react-icons/fa6'; // অথবা lucide-react / svg ব্যবহার করতে পারেন
+import { BookOpen, Mail, MapPin, Phone } from "lucide-react";
+import Link from "next/link";
+import { FaFacebookF, FaInstagram, FaXTwitter } from "react-icons/fa6"; // অথবা lucide-react / svg ব্যবহার করতে পারেন
 
 export default function Footer() {
   return (
@@ -10,7 +10,6 @@ export default function Footer() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* মূল ফুটার গ্রিড (৩ কলাম) */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 pb-12 border-b border-gray-800/60">
-          
           {/* ১. ব্র্যান্ড ইনফো ও বিবরণ */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
@@ -22,7 +21,8 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed max-w-sm">
-              A small neighbourhood library on the web. Share the books on your shelf and borrow the ones you have been meaning to read.
+              A small neighbourhood library on the web. Share the books on your
+              shelf and borrow the ones you have been meaning to read.
             </p>
           </div>
 
@@ -34,13 +34,19 @@ export default function Footer() {
             <ul className="space-y-3 text-sm text-gray-400">
               <li className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-emerald-500 shrink-0" />
-                <a href="mailto:hello@booknook.app" className="hover:text-white transition">
+                <a
+                  href="mailto:hello@booknook.app"
+                  className="hover:text-white transition"
+                >
                   hello@booknook.app
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-emerald-500 shrink-0" />
-                <a href="tel:+8801867070070" className="hover:text-white transition">
+                <a
+                  href="tel:+8801867070070"
+                  className="hover:text-white transition"
+                >
                   +880 1867070070
                 </a>
               </li>
@@ -89,7 +95,6 @@ export default function Footer() {
               </a>
             </div>
           </div>
-
         </div>
 
         {/* নিচের কপিরাইট সেকশন */}

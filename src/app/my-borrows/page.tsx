@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { authClient } from '@/lib/auth-client';
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { authClient } from "@/lib/auth-client";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 // Defined here so the page does not depend on a '@/types' file that may not exist.
 // If you already have IBorrow in '@/types' with these fields, you can import it instead.
@@ -20,13 +20,13 @@ interface IBorrow {
 
 // Shows "-" instead of "Invalid Date" when a date is missing or malformed
 const formatDate = (value?: string) => {
-  if (!value) return '-';
+  if (!value) return "-";
   const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return '-';
-  return date.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
+  if (Number.isNaN(date.getTime())) return "-";
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
   });
 };
 
@@ -36,7 +36,7 @@ export default function MyBorrowsPage() {
 
   const [borrows, setBorrows] = useState<IBorrow[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [returningId, setReturningId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -54,15 +54,15 @@ export default function MyBorrowsPage() {
     const fetchMyBorrows = async () => {
       try {
         setLoading(true);
-        setError('');
+        setError("");
 
         const res = await fetch(
           `${API_URL}/borrows?email=${encodeURIComponent(userEmail)}`,
           {
-            cache: 'no-store',
-            credentials: 'include',
+            cache: "no-store",
+            credentials: "include",
             signal: controller.signal,
-          }
+          },
         );
 
         if (!res.ok) {
@@ -71,14 +71,14 @@ export default function MyBorrowsPage() {
 
         const data = await res.json();
         if (!Array.isArray(data)) {
-          throw new Error('Unexpected response from server');
+          throw new Error("Unexpected response from server");
         }
 
         setBorrows(data);
       } catch (err) {
-        if (err instanceof DOMException && err.name === 'AbortError') return;
-        console.error('Failed to fetch borrowed books:', err);
-        setError('Failed to load your borrowed books. Please try again.');
+        if (err instanceof DOMException && err.name === "AbortError") return;
+        console.error("Failed to fetch borrowed books:", err);
+        setError("Failed to load your borrowed books. Please try again.");
       } finally {
         if (!controller.signal.aborted) setLoading(false);
       }
@@ -90,24 +90,26 @@ export default function MyBorrowsPage() {
 
   const handleReturnBook = async (id: string) => {
     setReturningId(id);
-    setError('');
+    setError("");
 
     try {
       const res = await fetch(`${API_URL}/borrows/${id}`, {
-        method: 'DELETE',
-        credentials: 'include',
+        method: "DELETE",
+        credentials: "include",
       });
 
       if (!res.ok) {
         const body = await res.json().catch(() => null);
-        throw new Error(body?.message || `Server responded with status ${res.status}`);
+        throw new Error(
+          body?.message || `Server responded with status ${res.status}`,
+        );
       }
 
       // Remove the returned book from the list
       setBorrows((prev) => prev.filter((item) => item._id !== id));
     } catch (err) {
-      console.error('Failed to return book:', err);
-      setError('Could not return the book. Please try again.');
+      console.error("Failed to return book:", err);
+      setError("Could not return the book. Please try again.");
     } finally {
       setReturningId(null);
     }
@@ -129,7 +131,9 @@ export default function MyBorrowsPage() {
     return (
       <div className="min-h-screen bg-[#101512] flex items-center justify-center px-4 text-center text-white">
         <div>
-          <p className="mb-4 text-gray-300">Please log in to see your borrowed books.</p>
+          <p className="mb-4 text-gray-300">
+            Please log in to see your borrowed books.
+          </p>
           <Link
             href="/login"
             className="inline-block rounded-lg bg-emerald-500 px-5 py-2 text-sm font-medium text-black hover:bg-emerald-400 transition"
@@ -145,8 +149,12 @@ export default function MyBorrowsPage() {
     <div className="min-h-screen bg-[#101512] py-12 px-4 sm:px-6 lg:px-8 text-white">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-10">
-          <h1 className="text-3xl font-bold font-serif tracking-tight">My Borrows</h1>
-          <p className="text-gray-400 text-sm mt-1">Books you are reading right now.</p>
+          <h1 className="text-3xl font-bold font-serif tracking-tight">
+            My Borrows
+          </h1>
+          <p className="text-gray-400 text-sm mt-1">
+            Books you are reading right now.
+          </p>
         </div>
 
         {error && (
@@ -178,13 +186,16 @@ export default function MyBorrowsPage() {
                   </thead>
                   <tbody className="divide-y divide-gray-800/60 text-sm">
                     {borrows.map((borrow) => (
-                      <tr key={borrow._id} className="hover:bg-emerald-950/10 transition">
+                      <tr
+                        key={borrow._id}
+                        className="hover:bg-emerald-950/10 transition"
+                      >
                         <td className="py-4 px-6">
                           {borrow.bookImage ? (
                             // eslint-disable-next-line @next/next/no-img-element
                             <img
                               src={borrow.bookImage}
-                              alt={borrow.bookTitle || 'Book cover'}
+                              alt={borrow.bookTitle || "Book cover"}
                               className="w-12 h-16 object-cover rounded-md border border-gray-800"
                             />
                           ) : (
@@ -192,17 +203,23 @@ export default function MyBorrowsPage() {
                           )}
                         </td>
                         <td className="py-4 px-6 font-medium text-white">
-                          {borrow.bookTitle || 'Untitled book'}
+                          {borrow.bookTitle || "Untitled book"}
                         </td>
-                        <td className="py-4 px-6 text-gray-300">{formatDate(borrow.borrowDate)}</td>
-                        <td className="py-4 px-6 text-gray-300">{formatDate(borrow.returnDate)}</td>
+                        <td className="py-4 px-6 text-gray-300">
+                          {formatDate(borrow.borrowDate)}
+                        </td>
+                        <td className="py-4 px-6 text-gray-300">
+                          {formatDate(borrow.returnDate)}
+                        </td>
                         <td className="py-4 px-6 text-right">
                           <button
                             onClick={() => handleReturnBook(borrow._id)}
                             disabled={returningId === borrow._id}
                             className="px-4 py-2 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500 hover:text-black font-medium text-xs rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                           >
-                            {returningId === borrow._id ? 'Returning...' : 'Return Book'}
+                            {returningId === borrow._id
+                              ? "Returning..."
+                              : "Return Book"}
                           </button>
                         </td>
                       </tr>

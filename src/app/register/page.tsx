@@ -1,34 +1,27 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { BookOpen, Lock, Mail, User } from 'lucide-react';
-import { authClient } from '@/lib/auth-client'; // আপনার প্রজেক্টের পাথ অনুযায়ী এটি মিলিয়ে নেবেন
+import { BookOpen, Lock, Mail, User } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { authClient } from "@/lib/auth-client"; // আপনার প্রজেক্টের পাথ অনুযায়ী এটি মিলিয়ে নেবেন
 
 export default function RegisterPage() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
 const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    const { data, error } = await authClient.signUp.email({
-      name: "John Doe", 
-      email: "john.doe@example.com", 
-      password: "password1234", 
-      image: "https://example.com/image.png", 
-      callbackURL: "https://example.com/callback",
-    });
+    setError("");
 
     // পাসওয়ার্ড মিলছে কি না তা চেক করা
     if (password !== confirmPassword) {
-      setError('Passwords do not match!');
+      setError("Passwords do not match!");
       return;
     }
 
@@ -44,7 +37,7 @@ const handleSubmit = async (e: React.FormEvent) => {
         },
         {
           onSuccess: () => {
-            router.push('/'); // রেজিস্ট্রেশন সফল হলে হোমপেজে রিডাইরেক্ট করবে
+            router.push("/"); // রেজিস্ট্রেশন সফল হলে হোমপেজে রিডাইরেক্ট করবে
           },
           onError: (ctx) => {
             setError(ctx.error.message);
@@ -53,11 +46,11 @@ const handleSubmit = async (e: React.FormEvent) => {
       );
 
       if (authError) {
-        setError(authError.message || 'Registration failed');
+        setError(authError.message || "Registration failed");
       }
     } catch (err) {
       console.error(err);
-      setError('An unexpected error occurred.');
+      setError("An unexpected error occurred.");
     } finally {
       setLoading(false);
     }
@@ -66,12 +59,12 @@ const handleSubmit = async (e: React.FormEvent) => {
   const handleGoogleRegister = async () => {
     try {
       await authClient.signIn.social({
-        provider: 'google',
-        callbackURL: '/',
+        provider: "google",
+        callbackURL: "/",
       });
     } catch (err) {
-      console.error('Google sign up error:', err);
-      setError('Google sign up failed');
+      console.error("Google sign up error:", err);
+      setError("Google sign up failed");
     }
   };
 
@@ -83,8 +76,12 @@ const handleSubmit = async (e: React.FormEvent) => {
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600 text-white shadow-md mb-4">
             <BookOpen className="h-6 w-6" />
           </div>
-          <h2 className="text-2xl font-bold tracking-tight text-white">Create a BookNook Account</h2>
-          <p className="mt-2 text-sm text-slate-400">Join our library community</p>
+          <h2 className="text-2xl font-bold tracking-tight text-white">
+            Create a BookNook Account
+          </h2>
+          <p className="mt-2 text-sm text-slate-400">
+            Join our library community
+          </p>
         </div>
 
         {/* Google Register Button */}
@@ -116,7 +113,9 @@ const handleSubmit = async (e: React.FormEvent) => {
 
         <div className="relative flex py-2 items-center">
           <div className="flex-grow border-t border-slate-800"></div>
-          <span className="flex-shrink mx-4 text-xs text-slate-500 uppercase">Or register with email</span>
+          <span className="flex-shrink mx-4 text-xs text-slate-500 uppercase">
+            Or register with email
+          </span>
           <div className="flex-grow border-t border-slate-800"></div>
         </div>
 
@@ -130,7 +129,9 @@ const handleSubmit = async (e: React.FormEvent) => {
         {/* Email Register Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1">Full Name</label>
+            <label className="block text-xs font-medium text-slate-300 mb-1">
+              Full Name
+            </label>
             <div className="relative">
               <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">
                 <User className="h-4 w-4" />
@@ -147,7 +148,9 @@ const handleSubmit = async (e: React.FormEvent) => {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1">Email Address</label>
+            <label className="block text-xs font-medium text-slate-300 mb-1">
+              Email Address
+            </label>
             <div className="relative">
               <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">
                 <Mail className="h-4 w-4" />
@@ -164,7 +167,9 @@ const handleSubmit = async (e: React.FormEvent) => {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1">Password</label>
+            <label className="block text-xs font-medium text-slate-300 mb-1">
+              Password
+            </label>
             <div className="relative">
               <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">
                 <Lock className="h-4 w-4" />
@@ -181,7 +186,9 @@ const handleSubmit = async (e: React.FormEvent) => {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1">Confirm Password</label>
+            <label className="block text-xs font-medium text-slate-300 mb-1">
+              Confirm Password
+            </label>
             <div className="relative">
               <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">
                 <Lock className="h-4 w-4" />
@@ -202,14 +209,17 @@ const handleSubmit = async (e: React.FormEvent) => {
             disabled={loading}
             className="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-700 transition shadow-md disabled:opacity-50"
           >
-            {loading ? 'Creating Account...' : 'Create Account'}
+            {loading ? "Creating Account..." : "Create Account"}
           </button>
         </form>
 
         {/* Footer Link */}
         <p className="text-center text-sm text-slate-400">
-          Already have an account?{' '}
-          <Link href="/login" className="font-medium text-blue-400 hover:underline">
+          Already have an account?{" "}
+          <Link
+            href="/login"
+            className="font-medium text-blue-400 hover:underline"
+          >
             Login
           </Link>
         </p>

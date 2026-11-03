@@ -1,25 +1,23 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { BookOpen, Lock, Mail } from 'lucide-react';
-import { authClient } from '@/lib/auth-client';
+import { BookOpen, Lock, Mail } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { authClient } from "@/lib/auth-client";
 
 export default function LoginPage() {
   const router = useRouter();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSubmit = async (
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    setErrorMessage('');
+    setErrorMessage("");
     setLoading(true);
 
     try {
@@ -30,28 +28,24 @@ export default function LoginPage() {
       });
 
       if (error) {
-        setErrorMessage(
-          error.message || 'Invalid email or password.'
-        );
+        setErrorMessage(error.message || "Invalid email or password.");
         return;
       }
 
       if (!data) {
-        setErrorMessage('Login failed. Please try again.');
+        setErrorMessage("Login failed. Please try again.");
         return;
       }
 
       // Login successful
-      router.replace('/');
+      router.replace("/");
       router.refresh();
-
     } catch (error) {
-      console.error('Login error:', error);
+      console.error("Login error:", error);
 
       setErrorMessage(
-        'Unable to connect to the authentication server. Please try again.'
+        "Unable to connect to the authentication server. Please try again.",
       );
-
     } finally {
       setLoading(false);
     }
@@ -60,7 +54,6 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-slate-950 px-4 py-12">
       <div className="w-full max-w-md space-y-8 rounded-xl border border-slate-800 bg-slate-900 p-8 shadow-xl">
-
         {/* Header */}
         <div className="text-center">
           <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600 text-white shadow-md">
@@ -88,7 +81,6 @@ export default function LoginPage() {
 
         {/* Email Login Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
-
           {/* Email */}
           <div>
             <label
@@ -152,15 +144,13 @@ export default function LoginPage() {
             disabled={loading}
             className="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-md transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? "Signing in..." : "Sign In"}
           </button>
-
         </form>
 
         {/* Register Link */}
         <p className="text-center text-sm text-slate-400">
-          Don&apos;t have an account?{' '}
-
+          Don&apos;t have an account?{" "}
           <Link
             href="/register"
             className="font-medium text-blue-400 hover:underline"
@@ -168,7 +158,6 @@ export default function LoginPage() {
             Register
           </Link>
         </p>
-
       </div>
     </div>
   );

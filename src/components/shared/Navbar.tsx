@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { BookOpen, User, LogOut, Settings, ChevronDown } from 'lucide-react';
-import { authClient } from '@/lib/auth-client'; // আপনার পাথ ঠিক করে নেবেন
+import { BookOpen, ChevronDown, LogOut, Settings, User } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { authClient } from "@/lib/auth-client"; // আপনার পাথ ঠিক করে নেবেন
 
 export default function Navbar() {
   const router = useRouter();
-  
+
   // Better Auth এর বিল্ট-ইন হুক দিয়ে সেশন ও ইউজার ডেটা আনা
   const { data: session, isPending } = authClient.useSession();
-  
+
   // ড্রপডাউন মেনু টগল করার স্টেট
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -20,7 +20,7 @@ export default function Navbar() {
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
-          router.push('/login');
+          router.push("/login");
         },
       },
     });
@@ -29,13 +29,14 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-700 bg-slate-900 text-white shadow-md">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        
         {/* Left: Logo */}
         <Link href="/" className="flex items-center space-x-2">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600 text-white shadow">
             <BookOpen className="h-5 w-5" />
           </div>
-          <span className="text-2xl font-bold tracking-tight text-white">BookNook</span>
+          <span className="text-2xl font-bold tracking-tight text-white">
+            BookNook
+          </span>
         </Link>
 
         {/* Center: Nav Links */}
@@ -46,17 +47,26 @@ export default function Navbar() {
           <Link href="/books" className="transition-colors hover:text-blue-400">
             All Books
           </Link>
-          
+
           {/* সেশন বা ইউজার থাকলে মাঝখানের মেনুগুলো দেখাবে */}
           {session && (
             <>
-              <Link href="/add-book" className="transition-colors hover:text-blue-400">
+              <Link
+                href="/add-book"
+                className="transition-colors hover:text-blue-400"
+              >
                 Add Book
               </Link>
-              <Link href="/my-books" className="transition-colors hover:text-blue-400">
+              <Link
+                href="/my-books"
+                className="transition-colors hover:text-blue-400"
+              >
                 My Books
               </Link>
-              <Link href="/my-borrows" className="transition-colors hover:text-blue-400">
+              <Link
+                href="/my-borrows"
+                className="transition-colors hover:text-blue-400"
+              >
                 My Borrows
               </Link>
             </>
@@ -76,13 +86,15 @@ export default function Navbar() {
               >
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-white font-semibold">
                   {session.user.image ? (
-                    <img 
-                      src={session.user.image} 
-                      alt="User" 
-                      className="h-full w-full rounded-full object-cover" 
+                    <img
+                      src={session.user.image}
+                      alt="User"
+                      className="h-full w-full rounded-full object-cover"
                     />
                   ) : (
-                    session.user.name?.charAt(0).toUpperCase() || <User className="h-4 w-4" />
+                    session.user.name?.charAt(0).toUpperCase() || (
+                      <User className="h-4 w-4" />
+                    )
                   )}
                 </div>
                 <span className="text-sm font-medium text-slate-200 max-w-[100px] truncate">
@@ -96,7 +108,9 @@ export default function Navbar() {
                 <div className="absolute right-0 mt-2 w-48 rounded-xl bg-slate-900 border border-slate-800 shadow-xl py-1 z-50">
                   <div className="px-4 py-2 border-b border-slate-800">
                     <p className="text-xs text-slate-400">Signed in as</p>
-                    <p className="text-sm font-medium text-white truncate">{session.user.email}</p>
+                    <p className="text-sm font-medium text-white truncate">
+                      {session.user.email}
+                    </p>
                   </div>
 
                   <Link
@@ -150,7 +164,6 @@ export default function Navbar() {
             </div>
           )}
         </div>
-
       </div>
     </header>
   );

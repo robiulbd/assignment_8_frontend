@@ -1,6 +1,9 @@
 import { createAuthClient } from "better-auth/react";
 
 export const authClient = createAuthClient({
-  baseURL: process.env.BETTER_AUTH_URL, // আপনার ব্যাকএন্ড সার্ভারের বেস ইউআরএল
+  // ক্লায়েন্ট সাইডে অ্যাক্সেস করার জন্য NEXT_PUBLIC_ ব্যবহার করা বাধ্যতামূলক
+  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000", 
 });
-export const { signIn, signUp, useSession } = createAuthClient()
+
+// দ্বিতীয়বার createAuthClient() কল না করে, উপরের authClient থেকেই ফাংশনগুলো নিতে হবে
+export const { signIn, signUp, useSession, signOut } = authClient;

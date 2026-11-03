@@ -1,8 +1,7 @@
+"use client";
 
-'use client';
-
-import { useEffect, useState, type FormEvent } from 'react';
-import { authClient } from '@/lib/auth-client';
+import { type FormEvent, useEffect, useState } from "react";
+import { authClient } from "@/lib/auth-client";
 
 interface Book {
   _id: string;
@@ -11,7 +10,7 @@ interface Book {
   copies: number;
 }
 
-const API = 'http://localhost:5000/books';
+const API = "http://localhost:5000/books";
 
 export default function MyBooksPage() {
   const { data: session, isPending } = authClient.useSession();
@@ -32,7 +31,7 @@ export default function MyBooksPage() {
 
     fetch(`${API}?email=${encodeURIComponent(email)}`)
       .then((res) => {
-        if (!res.ok) throw new Error('Failed to load books');
+        if (!res.ok) throw new Error("Failed to load books");
         return res.json();
       })
       .then((data: Book[]) => setBooks(data))
@@ -42,20 +41,20 @@ export default function MyBooksPage() {
 
   // Delete book
   async function handleDelete(id: string) {
-    if (!window.confirm('Are you sure you want to delete this book?')) {
+    if (!window.confirm("Are you sure you want to delete this book?")) {
       return;
     }
 
     try {
       const res = await fetch(`${API}/${id}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
 
-      if (!res.ok) throw new Error('Failed to delete book');
+      if (!res.ok) throw new Error("Failed to delete book");
 
       setBooks(books.filter((book) => book._id !== id));
     } catch {
-      alert('Could not delete the book.');
+      alert("Could not delete the book.");
     }
   }
 
@@ -67,8 +66,8 @@ export default function MyBooksPage() {
 
     try {
       const res = await fetch(`${API}/${editingBook._id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title: editingBook.title,
           category: editingBook.category,
@@ -76,17 +75,17 @@ export default function MyBooksPage() {
         }),
       });
 
-      if (!res.ok) throw new Error('Failed to update book');
+      if (!res.ok) throw new Error("Failed to update book");
 
       setBooks(
         books.map((book) =>
-          book._id === editingBook._id ? editingBook : book
-        )
+          book._id === editingBook._id ? editingBook : book,
+        ),
       );
 
       setEditingBook(null);
     } catch {
-      alert('Could not update the book.');
+      alert("Could not update the book.");
     }
   }
 
@@ -109,9 +108,7 @@ export default function MyBooksPage() {
   return (
     <div className="min-h-screen bg-[#101512] px-4 py-12 text-white">
       <div className="max-w-5xl mx-auto">
-        <h1 className="text-3xl font-bold text-center mb-8">
-          My Books
-        </h1>
+        <h1 className="text-3xl font-bold text-center mb-8">My Books</h1>
 
         {books.length === 0 ? (
           <p className="text-center text-gray-400">
@@ -134,9 +131,7 @@ export default function MyBooksPage() {
                   <tr key={book._id}>
                     <td className="p-4">{book.title}</td>
                     <td className="p-4">{book.category}</td>
-                    <td className="p-4 text-emerald-400">
-                      {book.copies}
-                    </td>
+                    <td className="p-4 text-emerald-400">{book.copies}</td>
                     <td className="p-4 text-right whitespace-nowrap">
                       <button
                         onClick={() => setEditingBook({ ...book })}

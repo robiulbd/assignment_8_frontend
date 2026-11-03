@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useEffect, Suspense } from 'react';
-import Link from 'next/link';
-import { Hash, Search, BookOpen, RotateCcw, BookMarked } from 'lucide-react';
+import { BookMarked, BookOpen, Hash, RotateCcw, Search } from "lucide-react";
+import Link from "next/link";
+import { Suspense, useEffect, useState } from "react";
 
 interface Book {
   _id: string;
@@ -18,54 +18,54 @@ interface Book {
 
 const borrowingSteps = [
   {
-    step: 'Step 1',
-    title: 'Find a book',
-    description: 'Browse the shelf and open any book you like.',
+    step: "Step 1",
+    title: "Find a book",
+    description: "Browse the shelf and open any book you like.",
     icon: Search,
   },
   {
-    step: 'Step 2',
-    title: 'Borrow it',
-    description: 'Confirm the borrow. The book is yours for 7 days.',
+    step: "Step 2",
+    title: "Borrow it",
+    description: "Confirm the borrow. The book is yours for 7 days.",
     icon: BookOpen,
   },
   {
-    step: 'Step 3',
-    title: 'Return it',
-    description: 'Done reading? Return it from My Borrows in one click.',
+    step: "Step 3",
+    title: "Return it",
+    description: "Done reading? Return it from My Borrows in one click.",
     icon: RotateCcw,
   },
 ];
 
 const categories = [
-  'Fiction',
-  'Science',
-  'History',
-  'Kids',
-  'Poetry',
-  'Religion',
-  'Technology',
-  'Others',
+  "Fiction",
+  "Science",
+  "History",
+  "Kids",
+  "Poetry",
+  "Religion",
+  "Technology",
+  "Others",
 ];
 
 function AllBooksContent() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const res = await fetch('http://localhost:5000/books');
+        const res = await fetch("http://localhost:5000/books");
         if (!res.ok) {
-          throw new Error('Failed to fetch books');
+          throw new Error("Failed to fetch books");
         }
         const data: Book[] = await res.json();
         setBooks(data);
       } catch (err) {
         console.error(err);
-        setError('Failed to load books from server.');
+        setError("Failed to load books from server.");
       } finally {
         setLoading(false);
       }
@@ -87,7 +87,7 @@ function AllBooksContent() {
     ? books.filter(
         (book) =>
           book.category?.trim().toLowerCase() ===
-          selectedCategory.trim().toLowerCase()
+          selectedCategory.trim().toLowerCase(),
       )
     : books;
 
@@ -155,7 +155,8 @@ function AllBooksContent() {
         {selectedCategory && (
           <div className="flex items-center justify-between bg-emerald-950/30 border border-emerald-500/30 px-6 py-3 rounded-xl">
             <p className="text-sm text-emerald-400 font-medium">
-              Filtering by Category: <span className="font-bold underline">{selectedCategory}</span>
+              Filtering by Category:{" "}
+              <span className="font-bold underline">{selectedCategory}</span>
             </p>
             <button
               onClick={() => setSelectedCategory(null)}
@@ -170,7 +171,9 @@ function AllBooksContent() {
         <section>
           <div className="mb-8">
             <h1 className="text-2xl font-bold uppercase tracking-wider text-white mb-2">
-              {selectedCategory ? `${selectedCategory} - New Arrivals` : 'New Arrivals'}
+              {selectedCategory
+                ? `${selectedCategory} - New Arrivals`
+                : "New Arrivals"}
             </h1>
             <p className="text-sm text-gray-400">
               Explore our latest 8 books recently added to the library.
@@ -178,7 +181,9 @@ function AllBooksContent() {
           </div>
 
           {newArrivals.length === 0 ? (
-            <p className="text-gray-400 py-6">No new arrivals found in this category.</p>
+            <p className="text-gray-400 py-6">
+              No new arrivals found in this category.
+            </p>
           ) : (
             renderBookGrid(newArrivals)
           )}
@@ -189,7 +194,9 @@ function AllBooksContent() {
           <section className="pt-8 border-t border-gray-800">
             <div className="mb-8">
               <h2 className="text-2xl font-bold uppercase tracking-wider text-white mb-2">
-                {selectedCategory ? `${selectedCategory} - All Books` : 'All Books'}
+                {selectedCategory
+                  ? `${selectedCategory} - All Books`
+                  : "All Books"}
               </h2>
               <p className="text-sm text-gray-400">
                 Explore and borrow more books from the community library
@@ -248,7 +255,8 @@ function AllBooksContent() {
               Top Categories
             </h2>
             <p className="text-sm text-gray-400">
-              Pick a shelf and start reading. Click any category to filter books.
+              Pick a shelf and start reading. Click any category to filter
+              books.
             </p>
           </div>
 
@@ -260,12 +268,12 @@ function AllBooksContent() {
                   key={category}
                   onClick={() => {
                     setSelectedCategory(isSelected ? null : category);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    window.scrollTo({ top: 0, behavior: "smooth" });
                   }}
                   className={`bg-[#161d18] border rounded-xl p-8 text-center flex flex-col items-center cursor-pointer transition duration-200 ${
                     isSelected
-                      ? 'border-emerald-500 bg-emerald-950/20 shadow-lg shadow-emerald-500/10 scale-105'
-                      : 'border-gray-800 hover:border-emerald-500/40 hover:bg-[#1a231d]'
+                      ? "border-emerald-500 bg-emerald-950/20 shadow-lg shadow-emerald-500/10 scale-105"
+                      : "border-gray-800 hover:border-emerald-500/40 hover:bg-[#1a231d]"
                   }`}
                 >
                   <div className="text-emerald-400 mb-3">

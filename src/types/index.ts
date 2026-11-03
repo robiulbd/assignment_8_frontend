@@ -1,8 +1,8 @@
-export interface IBook {
+export interface Book {
   _id?: string;
   title: string;
   author: string;
-  category: 'Fiction' | 'Science' | 'History' | 'Kids' | 'Others';
+  category: "Fiction" | "Science" | "History" | "Kids" | "Others";
   image: string;
   description: string;
   copies: number;
@@ -16,6 +16,7 @@ export interface IBorrow {
   bookId: string;
   bookTitle: string;
   bookImage: string;
+  userName?: string;
   userEmail: string;
   borrowDate: string;
   returnDate: string;

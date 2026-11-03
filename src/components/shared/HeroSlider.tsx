@@ -1,28 +1,30 @@
-'tsx'
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 // স্লাইডারের জন্য কিছু স্যাম্পল লাইব্রেরি/বইয়ের ব্যাকগ্রাউন্ড ইমেজ ও টেক্সট
 const slides = [
   {
     id: 1,
-    image: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=1920&auto=format&fit=crop',
-    title: 'Welcome to BookNook Online Library',
-    subtitle: 'Discover, borrow, and manage your favorite books seamlessly.',
+    image:
+      "https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=1920&auto=format&fit=crop",
+    title: "Welcome to BookNook Online Library",
+    subtitle: "Discover, borrow, and manage your favorite books seamlessly.",
   },
   {
     id: 2,
-    image: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=1920&auto=format&fit=crop',
-    title: 'Expand Your Reading Horizons',
-    subtitle: 'Explore thousands of books from various genres and authors.',
+    image:
+      "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=1920&auto=format&fit=crop",
+    title: "Expand Your Reading Horizons",
+    subtitle: "Explore thousands of books from various genres and authors.",
   },
   {
     id: 3,
-    image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=1920&auto=format&fit=crop',
-    title: 'Add And Share Your Books',
-    subtitle: 'Manage your personal collection and share with others easily.',
+    image:
+      "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=1920&auto=format&fit=crop",
+    title: "Add And Share Your Books",
+    subtitle: "Manage your personal collection and share with others easily.",
   },
 ];
 
@@ -45,7 +47,7 @@ export default function HeroSlider() {
         <div
           key={slide.id}
           className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-            index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'
+            index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
           }`}
         >
           {/* Background Image */}
@@ -87,7 +89,7 @@ export default function HeroSlider() {
             key={index}
             onClick={() => setCurrentSlide(index)}
             className={`h-2 rounded-full transition-all duration-300 ${
-              index === currentSlide ? 'w-6 bg-primary' : 'w-2 bg-white/50'
+              index === currentSlide ? "w-6 bg-primary" : "w-2 bg-white/50"
             }`}
             aria-label={`Go to slide ${index + 1}`}
           />

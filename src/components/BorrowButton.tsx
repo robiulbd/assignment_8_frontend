@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import BorrowModal from '@/components/BorrowModal';
-import { authClient } from '@/lib/auth-client';
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import BorrowModal from "@/components/BorrowModal";
+import { authClient } from "@/lib/auth-client";
 
 interface BorrowButtonProps {
   book: {
-    _id: string;
+    _id?: string;
     title: string;
     copies: number;
     image?: string;
@@ -21,53 +21,41 @@ export default function BorrowButton({ book }: BorrowButtonProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [availableCopies, setAvailableCopies] = useState(book.copies);
-  const [borrowerName, setBorrowerName] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
 
-  // সেশন লোড হলে লগইন করা ইউজারের নাম ডিফল্ট হিসেবে সেট হবে
-  useEffect(() => {
-    if (session?.user?.name) {
-      setBorrowerName(session.user.name);
-    }
-  }, [session?.user?.name]);
+  const borrowerName = session?.user?.name || "Unknown User";
+  const userEmail = session?.user?.email || "";
 
   const handleConfirmBorrow = async () => {
-    const userEmail = session?.user?.email;
-
     if (!userEmail) {
-      setErrorMessage('Please log in before borrowing a book.');
-      return;
-    }
-
-    if (!borrowerName.trim()) {
-      setErrorMessage('Please enter your name.');
+      setErrorMessage("Please log in before borrowing a book.");
       return;
     }
 
     if (availableCopies <= 0) {
-      setErrorMessage('No copies are currently available.');
+      setErrorMessage("No copies are currently available.");
       return;
     }
 
     setLoading(true);
-    setErrorMessage('');
+    setErrorMessage("");
 
     const borrowDate = new Date();
     const returnDate = new Date(borrowDate);
     returnDate.setDate(returnDate.getDate() + 7);
 
     try {
-      const response = await fetch('http://localhost:5000/borrows', {
-        method: 'POST',
+      const response = await fetch("http://localhost:5000/borrows", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify({
           bookId: book._id,
           bookTitle: book.title,
-          bookImage: book.image || '',
-          userName: borrowerName.trim(),
+          bookImage: book.image || "",
+          userName: borrowerName,
           userEmail,
           borrowDate: borrowDate.toISOString(),
           returnDate: returnDate.toISOString(),
@@ -77,7 +65,7 @@ export default function BorrowButton({ book }: BorrowButtonProps) {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.message || 'Failed to borrow the book.');
+        throw new Error(result.message || "Failed to borrow the book.");
       }
 
       setAvailableCopies((previous) => previous - 1);
@@ -86,13 +74,13 @@ export default function BorrowButton({ book }: BorrowButtonProps) {
       alert(
         `Successfully borrowed: ${book.title}\nReturn date: ${returnDate.toLocaleDateString()}`
       );
-      router.push('/my-borrows');
+      router.push("/my-borrows");
     } catch (error) {
-      console.error('Borrow error:', error);
+      console.error("Borrow error:", error);
       setErrorMessage(
         error instanceof Error
           ? error.message
-          : 'Something went wrong while borrowing the book.'
+          : "Something went wrong while borrowing the book."
       );
     } finally {
       setLoading(false);
@@ -101,10 +89,11 @@ export default function BorrowButton({ book }: BorrowButtonProps) {
 
   return (
     <div className="flex w-full flex-col gap-4">
-      <div>
-        <span className="inline-flex items-center gap-2 rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5 text-sm font-semibold text-emerald-400">
-          Available Copies: {availableCopies}
-        </span>
+      <div className="flex justify-between items-center bg-[#101512] p-3 rounded-lg border border-gray-800">
+         <span className="text-gray-400 text-xs">Copies left</span>
+         <span className={`font-bold text-base ${availableCopies > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+           {availableCopies > 0 ? availableCopies : "Out of Stock"}
+         </span>
       </div>
 
       {errorMessage && (
@@ -113,23 +102,21 @@ export default function BorrowButton({ book }: BorrowButtonProps) {
         </p>
       )}
 
-      <div className="flex gap-4 border-t border-slate-800 pt-4">
+      <div className="flex gap-4">
         <button
           type="button"
           onClick={() => {
-            setErrorMessage('');
-
-            if (!session?.user?.email) {
-              setErrorMessage('Please log in before borrowing a book.');
+            setErrorMessage("");
+            if (!userEmail) {
+              setErrorMessage("Please log in before borrowing a book.");
               return;
             }
-
             setIsModalOpen(true);
           }}
           disabled={isPending || availableCopies <= 0 || loading}
-          className="flex-1 rounded-xl bg-emerald-600 px-6 py-2.5 text-center font-medium text-white shadow-lg transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:bg-gray-600"
+          className="flex-1 rounded-xl bg-emerald-600 px-6 py-3 text-center font-medium text-white shadow-lg transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:bg-gray-600"
         >
-          {availableCopies > 0 ? 'Borrow Book' : 'Out of Stock'}
+          {availableCopies > 0 ? "Borrow Book" : "Not Available"}
         </button>
       </div>
 
@@ -141,9 +128,8 @@ export default function BorrowButton({ book }: BorrowButtonProps) {
           }
         }}
         bookTitle={book.title}
-        userName={borrowerName}
-        onUserNameChange={setBorrowerName}
-        userEmail={session?.user?.email || ''}
+        userName={borrowerName} 
+        userEmail={userEmail}
         onConfirm={handleConfirmBorrow}
         loading={loading}
       />

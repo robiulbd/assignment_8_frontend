@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { Hash } from 'lucide-react';
-import HeroSlider from '@/components/shared/HeroSlider';
+import { Hash } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import HeroSlider from "@/components/shared/HeroSlider";
 
 interface Book {
   _id: string;
@@ -19,7 +19,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('http://localhost:5000/books?limit=8')
+    fetch("http://localhost:5000/books?limit=8")
       .then((res) => res.json())
       .then((data: Book[]) => setBooks(data))
       .catch((err) => console.error(err))
