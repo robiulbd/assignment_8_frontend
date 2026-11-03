@@ -1,100 +1,109 @@
-interface BookDetailsProps {
-  params: Promise<{
-    id: string;
-  }>;
-}
+'use client';
 
-export default async function BookDetailsPage({ params }: BookDetailsProps) {
-  const { id } = await params;
+import { useEffect, useState, Suspense } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
+import BorrowButton from '@/components/BorrowButton';
+import { Book } from '@/types';
 
-  // ব্যাকএন্ড সার্ভার থেকে নির্দিষ্ট বইয়ের ডেটা ফেচ করা
-  const res = await fetch(`http://localhost:5000/books/${id}`, {
-    cache: 'no-store',
-  });
+// ১. মূল সমস্ত লজিক ও ইউআই এই কম্পোনেন্টের ভেতরে থাকবে
+function BookDetailsPageContent() {
+  const params = useParams();
+  const router = useRouter();
+  const id = params?.id as string;
 
-  if (!res.ok) {
+  const [book, setBook] = useState<Book | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const fetchBookDetails = async () => {
+      try {
+        const res = await fetch(`http://localhost:5000/books/${id}`);
+        if (res.ok) {
+          const data = await res.json();
+          setBook(data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch book details:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchBookDetails();
+    }
+  }, [id]);
+
+  if (loading) {
     return (
-      <div className="min-h-[calc(100vh-4rem)] bg-slate-950 p-8 text-white flex items-center justify-center">
-        <p className="text-red-400 text-lg">Book details not found or server error!</p>
+      <div className="min-h-screen bg-[#101512] flex items-center justify-center text-emerald-400">
+        <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
 
-  const book = await res.json();
+  if (!book) {
+    return (
+      <div className="min-h-[calc(100vh-4rem)] bg-[#101512] p-8 text-white flex flex-col items-center justify-center">
+        <p className="text-red-400 text-lg mb-4">Book details not found or server error!</p>
+        <Link href="/books" className="px-4 py-2 bg-emerald-500 text-black font-semibold rounded-lg">
+          Back to All Books
+        </Link>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-slate-950 py-12 px-4 text-white">
-      <div className="max-w-5xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-8">
-        
-        {/* Grid Layout: বামে কভার পেজ, ডানে তথ্য */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+    <div className="min-h-screen bg-[#101512] py-12 px-4 sm:px-6 lg:px-8 text-white">
+      <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-[#161d18] border border-gray-800 p-8 rounded-2xl shadow-xl">
+        <div className="h-96 w-full rounded-xl overflow-hidden bg-[#101512] border border-gray-800 flex items-center justify-center p-2">
+          <img src={book.image} alt={book.title} className="max-h-full max-w-full object-contain" />
+        </div>
+        <div>
+          <span className="text-xs font-semibold text-emerald-400 uppercase tracking-wider">{book.category}</span>
+          <h1 className="text-3xl font-bold mt-1 mb-2 font-serif">{book.title}</h1>
+          <p className="text-gray-400 text-sm mb-4">by {book.author}</p>
+          <p className="text-gray-300 text-sm leading-relaxed mb-6">{book.description}</p>
           
-          {/* বাম দিক: বইয়ের কভার পেজ */}
-          <div className="md:col-span-1">
-            {book.image ? (
-              <img 
-                src={book.image} 
-                alt={book.title} 
-                className="w-full h-80 object-cover rounded-xl border border-slate-700 shadow-md" 
-              />
-            ) : (
-              <div className="w-full h-80 bg-slate-800 rounded-xl flex items-center justify-center text-slate-500">
-                No Image Available
-              </div>
-            )}
+          <div className="bg-[#101512] p-4 rounded-xl border border-gray-800 mb-6 flex justify-between items-center text-sm">
+            <div>
+              <p className="text-gray-400 text-xs">Added by</p>
+              <p className="text-white font-medium">{book.userName}</p>
+            </div>
+            <div>
+              <p className="text-gray-400 text-xs">Copies left</p>
+              <p className="text-emerald-400 font-bold text-base">{book.copies}</p> 
+            </div>
           </div>
 
-          {/* ডান দিক: সমস্ত বিস্তারিত তথ্য */}
-          <div className="md:col-span-2 flex flex-col justify-between h-full">
-            <div>
-              {/* ক্যাটাগরি ব্যাজ */}
-              <span className="inline-block bg-blue-600/90 text-xs px-3 py-1 rounded-full font-semibold mb-3">
-                {book.category}
-              </span>
-
-              {/* বইয়ের নাম ও লেখক */}
-              <h1 className="text-3xl font-extrabold text-white mb-2">{book.title}</h1>
-              <p className="text-slate-400 text-base mb-4">Author: <span className="text-slate-200 font-medium">{book.author}</span></p>
-
-              {/* বিস্তারিত বিবরণ */}
-              <div className="mb-6">
-                <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-2">Description</h3>
-                <p className="text-slate-300 leading-relaxed text-sm">{book.description}</p>
-              </div>
-
-              {/* ইনক্লুডকারী বা ইউজারের তথ্য */}
-              <div className="border-t border-slate-800 pt-4 mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                <div>
-                  <p className="text-slate-400">Added By:</p>
-                  <p className="font-medium text-slate-200">{book.userName || 'Community Member'}</p>
-                </div>
-                <div>
-                  <p className="text-slate-400">Contact Email:</p>
-                  <p className="font-medium text-slate-200">{book.userEmail || 'N/A'}</p>
-                </div>
-              </div>
-
-              {/* এভেইলেবল কপি */}
-              <div className="mb-6">
-                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-semibold">
-                  Available Copies: {book.copies}
-                </span>
-              </div>
-            </div>
-
-            {/* বড় করার বা বরো করার বাটন */}
-            <div className="pt-4 border-t border-slate-800 flex gap-4">
-              <button 
-                className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2.5 px-6 rounded-xl transition shadow-lg text-center"
-              >
-                Borrow Book
+          <div className="flex flex-col sm:flex-row gap-4">
+            {book.copies > 0 ? (
+              <BorrowButton book={book} />
+            ) : (
+              <button disabled className="px-6 py-3 bg-gray-800 text-gray-500 font-semibold rounded-xl cursor-not-allowed text-sm">
+                Not Available
               </button>
-            </div>
-
+            )}
+            <Link href="/books" className="px-6 py-3 border border-gray-700 hover:border-emerald-500 rounded-xl transition text-center text-sm font-medium flex items-center justify-center">
+              Back to all books
+            </Link>
           </div>
         </div>
-
       </div>
     </div>
+  );
+}
+
+// ২. মূল পেজ যা Suspense দিয়ে র‍্যাপ করা থাকবে (বিল্ড বা ডিপ্লয়ের সময় কোনো এরর দিবে না)
+export default function BookDetailsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#101512] flex items-center justify-center text-emerald-400">
+        <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    }>
+      <BookDetailsPageContent />
+    </Suspense>
   );
 }
