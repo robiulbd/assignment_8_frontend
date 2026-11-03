@@ -59,9 +59,18 @@ export default function AddBookPage() {
         body: JSON.stringify(bookData),
       });
 
-      if (!res.ok) {
-        throw new Error('Failed to add book');
-      }
+  if (!res.ok) {
+  throw new Error('Failed to add book');
+}
+
+// res.ok সত্য হলেই কেবল নিচের কোডগুলো রান করবে
+alert('Book added successfully!');
+setTitle('');
+setAuthor('');
+setCategory('');
+setDescription('');
+setImage('');
+setCopies(1);
 
       // সফল হলে অল বুকস বা হোম পেজে রিডাইরেক্ট করবে
       router.push('/books');
@@ -155,6 +164,7 @@ export default function AddBookPage() {
                   <option value="Kids">Kids</option>
                   <option value="Poetry">Poetry</option>
                   <option value="Religion">Religion</option>
+                  <option value="Technology">Technology</option>
                   <option value="Others">Others</option>
                 </select>
               </div>
