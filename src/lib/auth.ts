@@ -21,7 +21,7 @@ export const auth = betterAuth({
   },
 
   // ৩. Trusted Origins (Cross-Origin Request সফল করতে)
-  trustedOrigins: [process.env.CLIENT_URL || "http://localhost:3000"],
+  trustedOrigins: [process.env.BETTER_AUTH_URL !],
 
   // ৪. Advanced Settings (যদি Origin Check বন্ধ রাখতে চান)
   advanced: {
