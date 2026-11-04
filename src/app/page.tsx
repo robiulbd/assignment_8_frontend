@@ -4,6 +4,7 @@ import { Hash } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import HeroSlider from "@/components/shared/HeroSlider";
+import {API_URL} from "@/lib/api";
 
 interface Book {
   _id: string;
@@ -19,9 +20,13 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:5000/books?limit=8")
+    fetch(`${API_URL}/books?limit=8`)
       .then((res) => res.json())
-      .then((data: Book[]) => setBooks(data))
+      .then((data: Book[]) => {
+        if (Array.isArray(data)) {
+          setBooks(data);
+        }
+      })
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
   }, []);

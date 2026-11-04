@@ -2,7 +2,15 @@ export interface Book {
   _id?: string;
   title: string;
   author: string;
-  category: "Fiction" | "Science" | "History" | "Kids" | "Others";
+  category:
+    | "Fiction"
+    | "Science"
+    | "History"
+    | "Kids"
+    | "Poetry"
+    | "Religion"
+    | "Technology"
+    | "Others";
   image: string;
   description: string;
   copies: number;

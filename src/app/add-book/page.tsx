@@ -12,6 +12,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
+import { API_URL } from "@/lib/api";
 
 export default function AddBookPage() {
   const router = useRouter();
@@ -59,7 +60,7 @@ export default function AddBookPage() {
     };
 
     try {
-      const res = await fetch("http://localhost:5000/books", {
+      const res = await fetch(`${API_URL}/books`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -2,6 +2,7 @@
 
 import { type FormEvent, useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
+import { API_URL } from "@/lib/api";
 
 interface Book {
   _id: string;
@@ -10,7 +11,7 @@ interface Book {
   copies: number;
 }
 
-const API = "http://localhost:5000/books";
+const API = `${API_URL}/books`;
 
 export default function MyBooksPage() {
   const { data: session, isPending } = authClient.useSession();
@@ -52,7 +53,7 @@ export default function MyBooksPage() {
 
       if (!res.ok) throw new Error("Failed to delete book");
 
-      setBooks(books.filter((book) => book._id !== id));
+      setBooks((currentBooks) => currentBooks.filter((book) => book._id !== id));
     } catch {
       alert("Could not delete the book.");
     }
@@ -77,8 +78,8 @@ export default function MyBooksPage() {
 
       if (!res.ok) throw new Error("Failed to update book");
 
-      setBooks(
-        books.map((book) =>
+      setBooks((currentBooks) =>
+        currentBooks.map((book) =>
           book._id === editingBook._id ? editingBook : book,
         ),
       );

@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
+import { API_URL } from "@/lib/api";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
 
 // Defined here so the page does not depend on a '@/types' file that may not exist.
 // If you already have IBorrow in '@/types' with these fields, you can import it instead.
@@ -60,7 +61,7 @@ export default function MyBorrowsPage() {
           `${API_URL}/borrows?email=${encodeURIComponent(userEmail)}`,
           {
             cache: "no-store",
-            credentials: "include",
+            // credentials: "include",
             signal: controller.signal,
           },
         );
@@ -95,7 +96,7 @@ export default function MyBorrowsPage() {
     try {
       const res = await fetch(`${API_URL}/borrows/${id}`, {
         method: "DELETE",
-        credentials: "include",
+        // credentials: "include",
       });
 
       if (!res.ok) {

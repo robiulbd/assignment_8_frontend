@@ -3,6 +3,7 @@
 import { BookMarked, BookOpen, Hash, RotateCcw, Search } from "lucide-react";
 import Link from "next/link";
 import { Suspense, useEffect, useState } from "react";
+import { API_URL} from "@/lib/api";
 
 interface Book {
   _id: string;
@@ -57,7 +58,7 @@ function AllBooksContent() {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const res = await fetch("http://localhost:5000/books");
+        const res = await fetch(`${API_URL}/books`);
         if (!res.ok) {
           throw new Error("Failed to fetch books");
         }

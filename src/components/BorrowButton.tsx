@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import BorrowModal from "@/components/BorrowModal";
 import { authClient } from "@/lib/auth-client";
+import { API_URL } from "@/lib/api";
 
 interface BorrowButtonProps {
   book: {
@@ -45,12 +46,12 @@ export default function BorrowButton({ book }: BorrowButtonProps) {
     returnDate.setDate(returnDate.getDate() + 7);
 
     try {
-      const response = await fetch("http://localhost:5000/borrows", {
+      const response = await fetch(`${API_URL}/borrows`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include",
+        // credentials: "include",
         body: JSON.stringify({
           bookId: book._id,
           bookTitle: book.title,
